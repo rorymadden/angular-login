@@ -1,0 +1,18 @@
+extends ../includes/default
+
+block main
+  h1= user.fullname
+block content
+  .row
+    .span3
+      .nav.nav-list#account-nav
+          li
+            a(href="/account") Profile
+          li
+            a(href="/account/editPassword") Password
+          li
+            a(href="/account/linkedAccounts") Linked Accounts
+          li
+            a(href="/account/security") Security
+    .span9
+      block accountInfo

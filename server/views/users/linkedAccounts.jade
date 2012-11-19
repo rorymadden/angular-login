@@ -1,0 +1,26 @@
+extends account
+
+block accountInfo
+  .row.well
+    h2= title
+    .span2
+      if (user.facebook)
+        h3 Facebook
+        img(src='http://graph.facebook.com/' + user.facebook.id + '/picture?type=large')
+      else
+        p 
+          a(href='auth/google') Link your Facebook Account
+        a.btn(href="/auth/facebook")
+          img(src='/img/facebook.png')
+          &nbsp; Facebook &nbsp; &nbsp;
+    
+    .span2
+      if (user.google)
+        h3 Google
+        img(src=user.google.picture)
+      else
+        p 
+          a(href='auth/google') Link your Google Account
+        a.btn(href="/auth/google") 
+          img(src='/img/google.png')
+          &nbsp; Google &nbsp; &nbsp; &nbsp; &nbsp;

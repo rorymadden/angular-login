@@ -1,0 +1,66 @@
+form.well.form-horizontal#register(action="/signup", method="post")
+  h1 Register
+  //- input(type='hidden', name='_csrf', value=token)
+  .clear-fix
+    p Register with
+    a.btn(href="/auth/facebook")
+      img(src='img/facebook.png')
+      &nbsp; Facebook &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp;
+    a.btn(href="/auth/google") 
+      img(src='img/google.png')
+      &nbsp; Google &nbsp; &nbsp; &nbsp; &nbsp;
+
+  .or
+    p ---------------- OR ----------------
+
+  //- if (message.length>0)
+  //-   p!= message
+  .control-group
+    label.control-label(for='first') First Name
+    .controls
+      input#first.span2.required(type='text', name="first")
+  
+  .control-group
+    label.control-label(for='name') Last Name
+    .controls
+      input#last.span2.required(type='text', name="last")
+
+  .control-group
+    label.control-label(for='email') Email
+    .controls
+      input#email.span2.required(type='text', name="email")
+
+  .control-group
+    label.control-label(for='password') Password
+    .controls
+      input#password.span2.required(type='password', name="password")
+
+  .control-group
+    label.control-label(for='gender') Gender
+    .controls
+      select#gender.span2.required(name="gender")
+        option(value="") Please Select
+        option(value="female") Female
+        option(value="male") Male
+
+  //- .control-group
+  //-   label.control-label(for='dob') Date of Birth
+  //-   .controls
+  //-     //- select#dob(name="dob_year")
+  //-     //- $('#fld_id').dateDropDowns({ dateFormat:'mm-DD-yy', monthNames: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], yearStart:'1979', yearEnd:'2011'});
+  //-     input#dob(type='text', name="dob", placeholder='dd/mm/yy', value=formData.dob)
+
+  .control-group
+    .controls
+      label.checkbox I agree to
+        input.check_boxes.optional#tandc(type="checkbox", name="tandc", value="agreed", default='true')
+      span.help-block 
+        a(href='/terms') Terms of Use
+        &nbsp; and 
+        a(href='/privacy') Privacy Policy
+
+  .form-actions
+    button.btn.btn-primary(type='submit') Sign up
+    &nbsp; or &nbsp;
+    a.show-login(href="/login") login

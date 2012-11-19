@@ -1,0 +1,42 @@
+form.well(name="login", autocomplete="off")
+  h1 Welcome back!      
+  input(type='hidden', name='_csrf', value=token, mp-value-copy)
+  .clear-fix
+    p Sign in with
+    a.btn(href="/auth/facebook")
+      img(src='img/facebook.png')
+      &nbsp; Facebook &nbsp;
+    &nbsp; &nbsp; &nbsp;
+    a.btn(href="/auth/google") 
+      img(src='img/google.png')
+      &nbsp; Google &nbsp; &nbsp; &nbsp;
+      
+  .or
+    p ---------------- OR ----------------
+
+  //- if (message.length>0)
+  //-   p!= message
+  .control-group
+    label.control-label(for='email') Email
+    .controls
+      input#email.span3(ng-model='form.email', type='email',
+        name='email', required)
+      span.help-block(ng-show="login.email.$error.email") Please enter a valid email.
+
+  .control-group
+    label.control-label(for='password') Password
+    .controls
+      input#password.span3(ng-model='form.password', type='password',
+        name='password', required)
+      br
+      a(href='/forgotPassword')#forgot-password Forgot Your Password? 
+
+  label.checkbox Keep me signed in
+    input.check_boxes.optional#remember_me(ng-model='form.remember_me',
+      type="checkbox", name="remember_me", checked='true')
+
+  button.btn.btn-primary#btn-login(ng-click='loginUser()',
+    ng-disabled='login.$invalid || isUnchanged(user)')
+    i.icon-lock.icon-white 
+    &nbsp; Sign in
+  

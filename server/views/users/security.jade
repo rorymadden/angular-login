@@ -1,0 +1,39 @@
+extends account
+
+block accountInfo
+
+  .row.well
+    h2= title
+      h3 Logged In
+      if (message.length>0)
+        p!= message
+      if (cookies.length)
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th #
+              th Browser
+              th OS
+              th Date
+              th Remove
+          tbody
+            each cookie, i in cookies
+              tr
+                td= i+1
+                td= cookie.userAgent.Browser
+                td= cookie.userAgent.OS
+                td= cookie.created
+                td
+                  form(method='post', action='/account/removeCookie')
+                    input(type='hidden', name='_csrf', value=token)
+                    input(type='hidden', name='id', value=cookie.id)
+                    button.btn(type='submit')
+                      i.icon-remove-sign
+      else
+        p There are no cookies in use
+
+      hr
+      h2 Deactivate Account
+      form(action="/account/deactivate", method="post")
+        input(type='hidden', name='_csrf', value=token)
+        button.btn.btn-danger(type="submit") Deactivate Account

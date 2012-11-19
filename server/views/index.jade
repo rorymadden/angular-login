@@ -1,0 +1,32 @@
+extends includes/default
+
+block content
+  //- h1= appName
+  //- p Welcome to #{appName}
+  //- .span6
+  //-   if (message.length>0)
+  //-     p!= message
+  .row
+    .hero-unit.span6
+      h1 Welcome to #{appName}!
+      p Some promotional message goes here. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
+      p 
+        a.btn.primary largeExplore &raquo;
+    .span4(ng-view)
+
+
+  //- div(ng-controller='AppCtrl')
+  //-   h2 Hello {{name}}
+  //-   ul.menu
+  //-     li
+  //-       a(href='view1') view1
+  //-     li
+  //-       a(href='view2') view2
+
+  //-   div(ng-view)
+
+  //-   div
+  //-     | Angular seed app: v
+  //-     span(app-version)
+
+

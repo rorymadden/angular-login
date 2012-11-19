@@ -1,0 +1,33 @@
+extends account
+
+block accountInfo
+  form.well.form-horizontal(action="/account/edit", method="post")
+    input(type='hidden', name='_csrf', value=token)
+    h2= title
+    if (message.length>0)
+      p!= message
+    .control-group
+      label.control-label(for='first') First Name
+      .controls
+        input#first.span2.required(type='text', name="first", value=user.name.first)
+    
+    .control-group
+      label.control-label(for='name') Last Name
+      .controls
+        input#last.span2.required(type='text', name="last", value=user.name.last)
+
+    .control-group
+      label.control-label(for='email') Email
+      .controls
+        input#email.span2.required(type='text', name="email", value=user.email)
+
+    .control-group
+      label.control-label(for='gender') Gender
+      .controls
+        select#gender.span2.required(name="gender")
+          option(value="", selected=user.gender=="") Please Select
+          option(value="female", selected=user.gender=="female") Female
+          option(value="male", selected=user.gender=="male") Male
+
+    .form-actions
+      button.btn.btn-primary(type='submit') Update

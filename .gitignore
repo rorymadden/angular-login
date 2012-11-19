@@ -1,0 +1,10 @@
+config/config.js
+dist/*
+server-cov
+
+.DS_Store
+node_modules
+npm-debug.log
+traces.log
+
+public/coverage.html

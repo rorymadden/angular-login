@@ -1,0 +1,14 @@
+!!!
+html(ng-app="myApp")
+  include head
+  body
+    .wrapper
+      include header
+      .container
+        .main-content
+          .main-head
+            block main
+          block content
+      .push
+    include footer
+    include foot

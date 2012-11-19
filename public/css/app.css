@@ -28,3 +28,40 @@
   content: "";
   padding: 0;
 }
+
+body {
+  padding-top: 60px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+#register.form-horizontal .controls {
+  margin-left: 100px;
+}
+
+#register.form-horizontal .control-label {
+  width: 80px;
+}
+
+#register.form-horizontal .form-actions {
+  padding-left: 100px;
+}
+
+.form-horizontal .form-actions {
+  margin-bottom: 0px;
+}
+
+.center {
+  text-align: center;
+}
+
+.or {
+  text-align: center;
+  padding: 20px 0px 15px 0px;
+}

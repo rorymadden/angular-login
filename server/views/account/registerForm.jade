@@ -1,0 +1,99 @@
+form.well.form-horizontal#register(name="register")
+  h1 Register
+  //- needed to create a new directive to copy the value to the angular model
+  input#csrf(type='hidden', name='_csrf', ng-model='form._csrf',
+    value=token, mp-value-copy)
+  .clear-fix
+    p Register with
+    a.btn(href="/auth/facebook")
+      img(src='img/facebook.png')
+      &nbsp; Facebook &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp;
+    a.btn(href="/auth/google") 
+      img(src='img/google.png')
+      &nbsp; Google &nbsp; &nbsp; &nbsp; &nbsp;
+
+  .or
+    p ---------------- OR ----------------
+
+  .alert.alert-error(ng-show="error")
+    a.close(data-dismiss="alert") ×
+    {{error}}
+  .control-group
+    label.control-label(for='first') First Name
+    .controls
+      input#first.span2(ng-model='form.first', type='text', 
+        name='first', required)
+  
+  .control-group
+    label.control-label(for='name') Last Name
+    .controls
+      input#last.span2(ng-model='form.last', type='text',
+        name='last', required)
+
+  .control-group
+    label.control-label(for='email') Email
+    .controls
+      input#email.span2(ng-model='form.email', type='email',
+        name="email", required)
+      //- .div(ng-show="form.email.$dirty && form.email.$invalid")
+      span.help-block(ng-show="register.email.$error.email") Please enter a valid email.
+
+  .control-group
+    label.control-label(for='password') Password
+    .controls
+      input#password.span2(ng-model='form.password', type='password',
+        name="password", ng-minlength="6", required)
+      span.help-block(ng-show="register.password.$error.minlength") Password must be a minimum of 6 characters
+
+  .control-group
+    label.control-label(for='gender') Gender
+    .controls
+      select#gender.span2(ng-model='form.gender', name="gender", required)
+        option(value="") Please Select
+        option(value="female") Female
+        option(value="male") Male
+
+  //- .control-group
+  //-   label.control-label(for='dob') Date of Birth
+  //-   .controls
+  //-     //- select#dob(name="dob_year")
+  //-     //- $('#fld_id').dateDropDowns({ dateFormat:'mm-DD-yy', monthNames: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], yearStart:'1979', yearEnd:'2011'});
+  //-     input#dob(type='text', name="dob", placeholder='dd/mm/yy', value=formData.dob)
+
+  .control-group
+    .controls
+      label.checkbox I agree to
+        input.check_boxes#tandc(ng-model='form.tandc', type="checkbox",
+          name="tandc", ng-true-value="agreed", required)
+      span.help-block 
+        a(href="modals/terms", data-target="#myModal", data-toggle="modal") Terms of Use
+        &nbsp; and 
+        a(href='modals/privacy', data-target="#myModal", data-toggle="modal") Privacy Policy
+
+  .modal.hide.fade#myModal(role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+    .modal-header
+      button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+      h3 Need a header
+    .modal-body
+        p Stuff
+    .modal-footer
+      a.btn(href="#", data-dismiss="modal", aria-hidden="true") Close
+      //- a.btn.btn-primary(href="#") Save changes
+
+  .form-actions
+    button.btn.btn-primary(ng-click='registerUser()',
+      ng-disabled="register.$invalid || isUnchanged(user)") Sign up
+    &nbsp; or &nbsp;
+    a.show-login(href="/login") login
+//- a.btn(href="modals/terms", data-target="#myModal", role="button",data-toggle="modal") Launch demo modal
+
+//- .modal.hide.fade#myModal(role="dialog", aria-labelledby="myModalLabel", aria-hidden="true", tabIndex="-1")
+//-   .modal-header
+//-     button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+//-     h3 Need a header
+//-   .modal-body
+//-       p Stuff
+//-   .modal-footer
+//-     a.btn(href="#", data-dismiss="modal", aria-hidden="true") Close
+//-     a.btn.btn-primary(href="#") Save changes

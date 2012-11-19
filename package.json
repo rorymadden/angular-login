@@ -1,9 +1,23 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "3.0.0"
-    , "jade": ">= 0.0.1"
+  "name": "Angular-Login",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "nodev app.js",
+    "test": "make test"
+  },
+  "dependencies": {
+      "express": "3.0.0",
+      "jade": ">= 0.0.1",
+      "connect-redis": "1.4.x",
+      "mongoose": "3.0.x",
+      "express-validator": "0.3.x"
+  },
+  "devDependencies": {
+    "mocha": "1.6.x",
+    "should": "1.2.x",
+    "grunt-simple-mocha": "0.2.x",
+    "grunt": "*",
+    "supertest": "0.4.x"
   }
 }
