@@ -1,6 +1,7 @@
-form.well(name="login", autocomplete="off")
+form.well(name="login")
   h1 Welcome back!      
-  input(type='hidden', name='_csrf', value=token, mp-value-copy)
+  input#csrf(type='hidden', name='_csrf', ng-model='form._csrf',
+    value=token, mp-value-copy)
   .clear-fix
     p Sign in with
     a.btn(href="/auth/facebook")
@@ -14,8 +15,9 @@ form.well(name="login", autocomplete="off")
   .or
     p ---------------- OR ----------------
 
-  //- if (message.length>0)
-  //-   p!= message
+  .alert.alert-error(ng-show="error")
+    a.close(data-dismiss="alert") ×
+    div(ng-bind-html-unsafe="error")
   .control-group
     label.control-label(for='email') Email
     .controls
@@ -36,7 +38,7 @@ form.well(name="login", autocomplete="off")
       type="checkbox", name="remember_me", checked='true')
 
   button.btn.btn-primary#btn-login(ng-click='loginUser()',
-    ng-disabled='login.$invalid || isUnchanged(user)')
+    ng-disabled='login.$invalid || isUnchanged(form)')
     i.icon-lock.icon-white 
     &nbsp; Sign in
   

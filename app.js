@@ -7,6 +7,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var RedisStore = require('connect-redis')(express);
 var expressValidator = require('express-validator');
+var passport = require('passport');
 
 // load app utilities
 var env = process.env.NODE_ENV || 'development';
@@ -16,6 +17,9 @@ var mongodbURI = 'mongodb://' + config.mongodb.user + ':' +
   config.mongodb.password + '@' + config.mongodb.host + ':' +
   config.mongodb.port + '/' + config.mongodb.database;
 mongoose.connect(mongodbURI);
+
+// bootstrap passport config
+require('./server/utils/passportUtil').boot(passport, config);
 
 var app = module.exports = express();
 
@@ -45,6 +49,9 @@ app.configure(function(){
       })
   }));
 
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   // csrf
   if (env !== 'test') {
     app.use(express.csrf());
@@ -60,39 +67,15 @@ app.configure(function(){
         appName: config.appName
       // needed for csrf support
       , token: req.session._csrf
-      // //for auto-populating forms on failure
-      // , formData: formData
       // //for changing templates depending on whether the user is logged in
-      // , get user() {
-      //   return req.user;
-      // }
-      // , isAuthenticated: req.isAuthenticated
+      , get user() {
+        return req.user;
+      }
+      , isAuthenticated: req.isAuthenticated
       // , publicDir: __dirname
     });
     next();
   });
-  //session messages
-  // app.use(function(req, res, next) {
-
-  //   var err = req.session.error,
-  //       msg = req.session.success,
-  //       info = req.session.info,
-  //       syntax = function(type){
-  //         return '<div class="alert alert-' + type +
-  //           '"><a class="close" data-dismiss="alert">×</a>';
-  //       };
-
-  //   delete req.session.error;
-  //   delete req.session.success;
-  //   delete req.session.info;
-
-  //   res.locals.message = '';
-
-  //   if (err) {res.locals.message = syntax('error') + err + '</div>';}
-  //   else if (msg) {res.locals.message = syntax('success') + msg + '</div>';}
-  //   else if (info) {res.locals.message = syntax('info') + info + '</div>';}
-  //   next();
-  // });
 
   app.use(express.compress());
   // staticCache has been deprecated.
@@ -122,21 +105,47 @@ app.configure('production', function(){
 var routes = require('./routes');
 var api = require('./routes/api');
 var accountService = require('./server/apis/accountService');
+var accountUtil = require('./server/utils/accountUtil');
+var authorizationUtil = require('./server/utils/authorizationUtil');
 
 app.get('/', routes.index);
-app.get('/account/:name', routes.account);
+// app.get('/error', routes.error);
+app.get('/account/:name', authorizationUtil.isAnonymous, routes.account);
 app.post('/account/register', accountService.register);
-// app.get('/login', routes.login);
-// app.get('/register', routes.register);
-// app.get('/forgotPassword', routes.forgotPassword);
-// app.get('/resendActivationLink', routes.resendActivation);
-// app.get('/partials/:name', routes.partials);
+app.post('/account/resendActivation', accountService.resendActivationLink);
+app.get('/activate/:activationKey', accountService.activate, routes.index);
+app.get('/auth/facebook', passport.authenticate('facebook'
+  , { scope: 'email, user_birthday' }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook'
+  , { failureRedirect: '/login', successRedirect: '/' }));
+app.get('/auth/google', passport.authenticate('google'
+  , { scope: ['https://www.googleapis.com/auth/userinfo.profile'
+    , 'https://www.googleapis.com/auth/userinfo.email'] }));
+app.get('/auth/google/callback', passport.authenticate('google'
+  , { failureRedirect: '/login', successRedirect: '/' }));
+app.post('/account/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    var error = err || info;
+    if (error) {
+      if (typeof(error.message) !== 'undefined') {
+        var text = error.message;
+        error = text;
+      }
+      // req.session.error = error;
+      // return res.redirect('/login');
+      return res.json(406, { error: error });
+    }
+    req.newUser = user;
+    next();
+  })(req, res, next);
+}, accountService.loginUser);
+// app.get('/logout', accountUtil.logout);
+
+// TODO: get modals working
 app.get('/modals/:name', routes.modals);
 
-
-// JSON API
-
-app.get('/api/name', api.name);
+// // JSON API
+// app.get('/api/name', api.name);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

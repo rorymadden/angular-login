@@ -16,19 +16,19 @@ header#header
             //-   a(href="/schedules/new", title="New Schedule") New
           
           ul.nav.pull-right
-            //- if (isAuthenticated())
+            if (isAuthenticated())
               li
-                a.dropdown-toggle(data-toggle="dropdown", href="#") #{user.fullname}
+                a.dropdown-toggle(data-toggle="dropdown", href="#") #{user.name}
                 ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
                   li
                     a(href="/account", title="Account", tabIndex='-1') Account
                   li
                     a(href="/logout", title="logout", tabIndex='-1') Logout
-            //- else
-            li
-              a(href="/signup", title="Signup") Signup
-            li
-              a(href="/login", title="Login") Already a member?
+            else
+              li
+                a(href="/signup", title="Signup") Signup
+              li
+                a(href="/login", title="Login") Already a member?
                 //- need to add custom javascript to stop it from closing on a click
                 //- a.dropdown-toggle(data-toggle="dropdown", href="#", title="Login") Already a member?
                 //-   .dropdown-menu(role="menu", aria-labelledby="dLabel")

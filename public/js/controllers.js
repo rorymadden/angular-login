@@ -13,19 +13,24 @@
   //   });
 // }
 
-function RegisterCtrl($scope, $http) {
+function RegisterCtrl($scope, $location, $http) {
   $scope.form = {};
   $scope.registerUser = function () {
     $http.post('/account/register', $scope.form)
       .success(function(data) {
-        $location.path('/');
+        $location.path('/activationSent');
       })
       .error(function(data, status, headers, config) {
-        console.log('data: '+ JSON.stringify(data));
-        console.log('status: '+ status);
-        console.log('config: '+ JSON.stringify(config));
-        $scope.error = data.error;
-        // $location.path('/account/register');
+        $scope.error = data.error.message;
+      });
+  };
+  $scope.resendActivation = function () {
+    $http.post('/account/resendActivation', $scope.form)
+      .success(function(data) {
+        $location.path('/activationResent');
+      })
+      .error(function(data, status, headers, config) {
+        $scope.error = data.error.message;
       });
   };
   // $scope.terms = function() {
@@ -37,12 +42,16 @@ function RegisterCtrl($scope, $http) {
 }
 // RegisterCtrl.$inject = [];
 
-function LoginCtrl($scope, $http) {
+function LoginCtrl($scope, $location, $http) {
   $scope.form = {};
   $scope.loginUser = function () {
-    $http.post('/account/login', $scope.form).
-      success(function(data) {
+    $http.post('/account/login', $scope.form)
+      .success(function(data) {
         $location.path('/');
+      })
+      .error(function(data, status, headers, config) {
+        $scope.error = data.error.message;
+        console.log(data.error.message);
       });
   };
 }

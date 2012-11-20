@@ -4,11 +4,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // var timestamp = require('mongoose-timestamp')
 
-// var cryptographicService = require('../utils/cryptographicService.js');
+var cryptographicService = require('../utils/cryptographicService');
 
-// var MAX_LOGIN_ATTEMPTS = 5;
-// var LOCK_TIME = 5 * 60 * 1000;
 var GENDER = ['unknown', 'male', 'female'];
+var MAX_LOGIN_ATTEMPTS = 5;
+var LOCK_TIME = 5 * 60 * 1000;
 
 var roleSchema = new Schema({
   name:'String',
@@ -25,13 +25,13 @@ var UserSchema = new Schema({
   auth: {
     hashed_password: { type: String },
     activationKey: { type: String, sparse: true },
-    activationKeyUsed: { type: Boolean, default: false }
+    activationKeyUsed: { type: Boolean, default: false },
     // passwordResetKey: { type: String },
     // passwordResetDate: { type: Date },
     // passwordResetUsed: { type: Boolean },
-    // loginAttempts: { type: Number, required: true, default: 0 },
-    // lockUntil: { type: Number },
-    // accountDeactivated: { type: Boolean, default: false }
+    loginAttempts: { type: Number, required: true, default: 0 },
+    lockUntil: { type: Number },
+    accountDeactivated: { type: Boolean, default: false }
   },
   gender: { type: String, required: true, default: 'unknown',
     enum: GENDER },
@@ -81,22 +81,22 @@ UserSchema
  * Instance Methods
  */
 
-// UserSchema.methods.incLoginAttempts = function(callback) {
-//   // if we have a previous lock that has expired, restart at 1
-//   if (this.auth.lockUntil && this.auth.lockUntil < Date.now()) {
-//     return this.update({
-//         $set: { "auth.loginAttempts": 1 },
-//         $unset: { "auth.lockUntil": 1 }
-//     }, callback);
-//   }
-//   // otherwise we're incrementing
-//   var updates = { $inc: { "auth.loginAttempts": 1 } };
-//   // lock the account if we've reached max attempts and it's not locked already
-//   if (this.auth.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
-//     updates.$set = { "auth.lockUntil": Date.now() + LOCK_TIME };
-//   }
-//   return this.update(updates, callback);
-// };
+UserSchema.methods.incLoginAttempts = function(callback) {
+  // if we have a previous lock that has expired, restart at 1
+  if (this.auth.lockUntil && this.auth.lockUntil < Date.now()) {
+    return this.update({
+        $set: { "auth.loginAttempts": 1 },
+        $unset: { "auth.lockUntil": 1 }
+    }, callback);
+  }
+  // otherwise we're incrementing
+  var updates = { $inc: { "auth.loginAttempts": 1 } };
+  // lock the account if we've reached max attempts and it's not locked already
+  if (this.auth.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
+    updates.$set = { "auth.lockUntil": Date.now() + LOCK_TIME };
+  }
+  return this.update(updates, callback);
+};
 
 UserSchema.statics.findByEmail = function(email, callback) {
   if(!email) {
@@ -112,21 +112,23 @@ UserSchema.statics.findByEmail = function(email, callback) {
 /**
  * Pre Validate
  */
-// UserSchema.pre('validate', function (next) {
-//   var user = this;
+UserSchema.pre('validate', function (next) {
+  var user = this;
 
-//   //Hash Password
-//   // only hash the password if it has been set
-//   if (!user._password) {
-//     next();
-//     return;
-//   };
-//   // Encrypt the password with bcrypt
-//   cryptographicService.cryptPassword(user._password, function(err, hash) {
-//     if (err) return next(err);
-//     user.auth.hashed_password = hash;
-//     next();
-//   });
-// });
+  //Hash Password
+  // only hash the password if it has been set
+  if (!user._password) {
+    next();
+    return;
+  }
+  // Encrypt the password with bcrypt
+  cryptographicService.cryptPassword(user._password, function(err, hash) {
+    if (err) {
+      return next(err);
+    }
+    user.auth.hashed_password = hash;
+    next();
+  });
+});
 
 module.exports = mongoose.model('User', UserSchema);

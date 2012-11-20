@@ -18,7 +18,7 @@ form.well.form-horizontal#register(name="register")
 
   .alert.alert-error(ng-show="error")
     a.close(data-dismiss="alert") ×
-    {{error}}
+    div(ng-bind-html-unsafe="error")
   .control-group
     label.control-label(for='first') First Name
     .controls
@@ -83,17 +83,6 @@ form.well.form-horizontal#register(name="register")
 
   .form-actions
     button.btn.btn-primary(ng-click='registerUser()',
-      ng-disabled="register.$invalid || isUnchanged(user)") Sign up
+      ng-disabled="register.$invalid || isUnchanged(form)") Sign up
     &nbsp; or &nbsp;
     a.show-login(href="/login") login
-//- a.btn(href="modals/terms", data-target="#myModal", role="button",data-toggle="modal") Launch demo modal
-
-//- .modal.hide.fade#myModal(role="dialog", aria-labelledby="myModalLabel", aria-hidden="true", tabIndex="-1")
-//-   .modal-header
-//-     button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-//-     h3 Need a header
-//-   .modal-body
-//-       p Stuff
-//-   .modal-footer
-//-     a.btn(href="#", data-dismiss="modal", aria-hidden="true") Close
-//-     a.btn.btn-primary(href="#") Save changes

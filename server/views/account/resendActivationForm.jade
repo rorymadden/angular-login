@@ -1,0 +1,20 @@
+form.well(name="activationForm")
+  h1 Resend Activation Link
+  input#csrf(type='hidden', name='_csrf', ng-model='form._csrf',
+    value=token, mp-value-copy)
+  .alert.alert-error(ng-show="error")
+    a.close(data-dismiss="alert") ×
+    div(ng-bind-html-unsafe="error")
+  .control-group
+    label.control-label(for='email') Email
+    .controls
+      input#email.span3(ng-model="form.email", type='email',
+        name="email", required)
+      span.help-block(ng-show="activationForm.email.$error.email") Please enter a valid email.
+
+  button.btn.btn-primary#btn-login(ng-click='resendActivation()',
+    ng-disabled='activationForm.$invalid || isUnchanged(form)')
+    i.icon-lock.icon-white 
+    &nbsp; Sign in
+  &nbsp; or 
+  a.show-signup(href="/login") cancel

@@ -36,7 +36,7 @@ angular.module('myApp.directives', [])
           }
       }
     };
-  })
+  });
   // angular ui
   // .directive('uiModal', ['$timeout', function($timeout) {
   //   return {
